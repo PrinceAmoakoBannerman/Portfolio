@@ -29,6 +29,13 @@ export const projects = [
     stack: ["Python", "Django", "JavaScript", "PostgreSQL"],
     link: "https://tuffafrikan.com",
   },
+  {
+    tag: "Full-Stack · 2025",
+    title: "Asset Management System",
+    desc: "A web-based asset management platform for tracking, managing, and organising company assets — from acquisition to disposal, with full lifecycle visibility.",
+    stack: ["Python", "Django", "JavaScript", "PostgreSQL"],
+    link: "https://asm2-sage.vercel.app/",
+  },
 ];
 
 export const skills = [
