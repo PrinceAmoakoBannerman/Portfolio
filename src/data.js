@@ -30,6 +30,13 @@ export const projects = [
     link: "https://tuffafrikan.com",
   },
   {
+    tag: "Web App · 2026",
+    title: "LuxeLink",
+    desc: "A luxury lifestyle link hub — a Linktree-style landing page that connects clients to premium chauffeur, market, and itinerary services from one elegant page.",
+    stack: ["React", "JavaScript", "Tailwind CSS", "Vercel"],
+    link: "https://luxe-link-ecru.vercel.app/",
+  },
+  {
     tag: "Full-Stack · 2025",
     title: "Asset Management System",
     desc: "A web-based asset management platform for tracking, managing, and organising company assets — from acquisition to disposal, with full lifecycle visibility.",
