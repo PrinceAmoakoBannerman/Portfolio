@@ -43,6 +43,20 @@ export const projects = [
     stack: ["Python", "Django", "JavaScript", "PostgreSQL"],
     link: "https://asm2-sage.vercel.app/",
   },
+  {
+    tag: "E-Commerce · 2026",
+    title: "Rumi Skincare",
+    desc: "An e-commerce storefront for a skincare brand, built with Next.js — product catalogue, shopping experience, and a clean, brand-forward design.",
+    stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
+    link: "https://rumi-skincare.vercel.app/",
+  },
+  {
+    tag: "Web App · 2026",
+    title: "Audit",
+    desc: "A web-based audit report tool for creating, organising, and compiling audit documentation, with a clean interface for managing the reporting workflow.",
+    stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
+    link: "https://audit-two-tau.vercel.app/",
+  },
 ];
 
 export const skills = [
