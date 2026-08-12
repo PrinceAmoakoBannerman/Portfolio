@@ -57,6 +57,13 @@ export const projects = [
     stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
     link: "https://audit-two-tau.vercel.app/",
   },
+  {
+    tag: "Web App · 2026",
+    title: "StepOut",
+    desc: "An activity and experience discovery app — helping users find their next thing to do, with a clean, focused browsing experience.",
+    stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
+    link: "https://stepout-black.vercel.app/",
+  },
 ];
 
 export const posts = [
