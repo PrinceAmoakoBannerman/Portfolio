@@ -59,6 +59,27 @@ export const projects = [
   },
 ];
 
+export const posts = [
+  {
+    tag: "Django · Aug 2026",
+    title: "Structuring a Django project for scale",
+    desc: "Notes on app boundaries, settings management, and the folder layout I reach for once a Django project outgrows its starter structure.",
+    link: "#",
+  },
+  {
+    tag: "React · Jul 2026",
+    title: "Shipping fast with React and Tailwind",
+    desc: "How I go from a blank repo to a deployed, responsive landing page in an afternoon — the tools and shortcuts that actually save time.",
+    link: "#",
+  },
+  {
+    tag: "Deployment · Jun 2026",
+    title: "A practical guide to deploying on Vercel",
+    desc: "The deployment workflow I use for client projects: environment variables, preview deployments, and keeping production boring.",
+    link: "#",
+  },
+];
+
 export const skills = [
   {
     icon: "◈",

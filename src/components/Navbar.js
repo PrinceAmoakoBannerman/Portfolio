@@ -5,6 +5,7 @@ import useIsMobile from '../hooks/useIsMobile';
 const NAV_ITEMS = [
   ['about', 'About'],
   ['projects', 'Work'],
+  ['blog', 'Blog'],
   ['skills', 'Skills'],
   ['contact', 'Contact'],
 ];
