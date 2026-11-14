@@ -1,183 +1,117 @@
 import React, { useEffect, useState } from 'react';
-import { config } from '../data';
-import useIsMobile from '../hooks/useIsMobile';
+import { config, projects } from '../data';
+import { GitHubIcon, LinkedInIcon, MailIcon } from './Icons';
 
-export default function Hero() {
+function useTypewriter(phrases) {
   const [typed, setTyped] = useState('');
   const [phraseIndex, setPhraseIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
-  const [outlineHovered, setOutlineHovered] = useState(false);
-  const isMobile = useIsMobile();
-
-  const phrases = config.tagline;
 
   useEffect(() => {
     const current = phrases[phraseIndex];
     let timeout;
-    if (!deleting) {
-      if (charIndex < current.length) {
-        timeout = setTimeout(() => {
-          setTyped(current.slice(0, charIndex + 1));
-          setCharIndex(c => c + 1);
-        }, 70);
-      } else {
-        timeout = setTimeout(() => setDeleting(true), 1800);
-      }
+    if (!deleting && typed.length < current.length) {
+      timeout = setTimeout(() => setTyped(current.slice(0, typed.length + 1)), 65);
+    } else if (!deleting) {
+      timeout = setTimeout(() => setDeleting(true), 1800);
+    } else if (typed.length > 0) {
+      timeout = setTimeout(() => setTyped(current.slice(0, typed.length - 1)), 35);
     } else {
-      if (charIndex > 0) {
-        timeout = setTimeout(() => {
-          setTyped(current.slice(0, charIndex - 1));
-          setCharIndex(c => c - 1);
-        }, 40);
-      } else {
-        setDeleting(false);
-        setPhraseIndex(i => (i + 1) % phrases.length);
-      }
+      setDeleting(false);
+      setPhraseIndex((i) => (i + 1) % phrases.length);
     }
     return () => clearTimeout(timeout);
-  }, [charIndex, deleting, phraseIndex, phrases]);
+  }, [typed, deleting, phraseIndex, phrases]);
 
+  return typed;
+}
+
+export default function Hero() {
+  const typed = useTypewriter(config.tagline);
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
-  const nameParts = config.name.split(' ');
-  const firstName = nameParts[0];
-  const lastName = nameParts.slice(1).join(' ') || 'Here';
+  const [firstName, ...rest] = config.name.split(' ');
+  const lastName = rest.join(' ');
 
   return (
-    <section id="hero" style={{
-      position: 'relative',
-      zIndex: 1,
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      padding: isMobile ? '100px 24px 80px' : '120px 60px 80px',
-      borderBottom: '1px solid var(--border)',
-    }}>
-      <div style={{
-        fontFamily: "'JetBrains Mono', monospace",
-        fontSize: 12,
-        color: 'var(--accent)',
-        letterSpacing: '0.15em',
-        textTransform: 'uppercase',
-        marginBottom: 32,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 12,
-      }}>
-        <span style={{ display: 'block', width: 32, height: 1, background: 'var(--accent)' }} />
-        {config.availability}
-      </div>
+    <section id="hero" className="hero">
+      <div className="orb orb-1" />
+      <div className="orb orb-2" />
+      <div className="orb orb-3" />
 
-      <h1 style={{
-        fontFamily: "'Space Grotesk', sans-serif",
-        fontSize: isMobile ? 'clamp(48px, 14vw, 72px)' : 'clamp(56px, 9vw, 120px)',
-        fontWeight: 700,
-        lineHeight: 0.95,
-        letterSpacing: '-0.03em',
-        marginBottom: 28,
-      }}>
-        {firstName}<br />
-        <span
-          style={{
-            color: outlineHovered ? 'var(--text)' : 'transparent',
-            WebkitTextStroke: outlineHovered ? '1.5px transparent' : '1.5px var(--border)',
-            transition: 'color 0.3s, -webkit-text-stroke 0.3s',
-            cursor: 'default',
-          }}
-          onMouseEnter={() => setOutlineHovered(true)}
-          onMouseLeave={() => setOutlineHovered(false)}
-        >
-          {lastName}
-        </span>
-        <br />Here.
-      </h1>
+      <div className="hero-grid">
+        <div>
+          <div className="pill">
+            <span className="pulse" />
+            {config.availability}
+          </div>
 
-      <div style={{
-        fontFamily: "'JetBrains Mono', monospace",
-        fontSize: isMobile ? 'clamp(14px, 4vw, 18px)' : 'clamp(16px, 2.5vw, 22px)',
-        color: 'var(--muted)',
-        marginBottom: 48,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-      }}>
-        <span style={{ color: 'var(--accent)' }}>$</span>
-        <span style={{ color: 'var(--text)' }}>{typed}</span>
-        <span style={{
-          display: 'inline-block',
-          width: 2,
-          height: '1.1em',
-          background: 'var(--accent)',
-          verticalAlign: 'text-bottom',
-          animation: 'blink 1s step-end infinite',
-        }} />
-      </div>
+          <h1>
+            Hi, I'm {firstName}.<br />
+            <span className="grad-text">I build products</span><br />
+            people use.
+          </h1>
 
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-        <button
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 13,
-            padding: isMobile ? '13px 22px' : '14px 28px',
-            background: 'var(--accent)',
-            color: 'var(--bg)',
-            border: 'none',
-            cursor: 'pointer',
-            letterSpacing: '0.08em',
-            fontWeight: 500,
-            transition: 'opacity 0.2s, transform 0.2s',
-          }}
-          onClick={() => scrollTo('projects')}
-          onMouseEnter={e => { e.target.style.opacity = '0.85'; e.target.style.transform = 'translateY(-1px)'; }}
-          onMouseLeave={e => { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }}
-        >
-          View My Work
-        </button>
-        <button
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 13,
-            padding: isMobile ? '13px 22px' : '14px 28px',
-            background: 'transparent',
-            color: 'var(--text)',
-            border: '1px solid var(--border)',
-            cursor: 'pointer',
-            letterSpacing: '0.08em',
-            transition: 'border-color 0.2s, transform 0.2s',
-          }}
-          onClick={() => scrollTo('contact')}
-          onMouseEnter={e => { e.target.style.borderColor = 'var(--muted)'; e.target.style.transform = 'translateY(-1px)'; }}
-          onMouseLeave={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.transform = 'translateY(0)'; }}
-        >
-          Get In Touch
-        </button>
-      </div>
+          <p className="hero-lead">
+            {lastName ? `${firstName} ${lastName} — ` : ''}a full-stack developer specialising in
+            Python &amp; Django, shipping fast, polished web apps from database to UI.
+          </p>
 
-      {!isMobile && (
-        <div style={{
-          position: 'absolute',
-          bottom: 40,
-          left: 60,
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 11,
-          color: 'var(--muted)',
-          letterSpacing: '0.12em',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-        }}>
-          scroll to explore
-          <span style={{
-            display: 'block',
-            width: 40,
-            height: 1,
-            background: 'var(--border)',
-            animation: 'expandLine 2s ease-in-out infinite',
-          }} />
+          <div className="typed">
+            <span className="prompt">❯</span>
+            <span>{typed}</span>
+            <span className="caret" />
+          </div>
+
+          <div className="hero-actions">
+            <button className="btn btn-primary" onClick={() => scrollTo('projects')}>
+              View my work <span className="arrow">→</span>
+            </button>
+            <button className="btn btn-ghost" onClick={() => scrollTo('contact')}>
+              Let's talk
+            </button>
+          </div>
+
+          <div className="socials">
+            <a className="icon-btn" href={config.github} target="_blank" rel="noreferrer" aria-label="GitHub"><GitHubIcon /></a>
+            <a className="icon-btn" href={config.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn"><LinkedInIcon /></a>
+            <a className="icon-btn" href={`mailto:${config.email}`} aria-label="Email"><MailIcon /></a>
+          </div>
         </div>
-      )}
+
+        <div className="hero-visual">
+          <div className="code-card">
+            <div className="window-bar">
+              <span className="dot" style={{ background: '#FF5F57' }} />
+              <span className="dot" style={{ background: '#FEBC2E' }} />
+              <span className="dot" style={{ background: '#28C840' }} />
+              <span className="window-title">developer.py</span>
+            </div>
+            <div className="code">
+<span className="c-k">class</span> <span className="c-f">Developer</span><span className="c-p">:</span>{'\n'}
+{'    '}name <span className="c-p">=</span> <span className="c-s">"{firstName}"</span>{'\n'}
+{'    '}role <span className="c-p">=</span> <span className="c-s">"Full-Stack Engineer"</span>{'\n'}
+{'    '}stack <span className="c-p">=</span> <span className="c-p">[</span><span className="c-s">"Django"</span>, <span className="c-s">"React"</span>,{'\n'}
+{'             '}<span className="c-s">"Next.js"</span>, <span className="c-s">"PostgreSQL"</span><span className="c-p">]</span>{'\n'}
+{'\n'}
+{'    '}<span className="c-k">def</span> <span className="c-f">ship</span><span className="c-p">(</span>self, idea<span className="c-p">):</span>{'\n'}
+{'        '}<span className="c-c"># from first commit to production</span>{'\n'}
+{'        '}<span className="c-k">return</span> <span className="c-f">build</span><span className="c-p">(</span>idea, quality<span className="c-p">=</span><span className="c-n">100</span><span className="c-p">)</span>
+            </div>
+          </div>
+
+          <div className="float-chip chip-1">
+            <span className="chip-icon">🚀</span>
+            <span><b>{projects.length}</b> live projects</span>
+          </div>
+          <div className="float-chip chip-2">
+            <span className="chip-icon">⚡</span>
+            <span>Python · Django · React</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="scroll-hint" aria-hidden="true"><span /></div>
     </section>
   );
 }

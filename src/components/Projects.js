@@ -1,145 +1,82 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { projects } from '../data';
-import useIsMobile from '../hooks/useIsMobile';
+import useReveal from '../hooks/useReveal';
 
-function ProjectCard({ project, index, isMobile }) {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
+function hostOf(url) {
+  try { return new URL(url).host.replace(/^www\./, ''); } catch { return url; }
+}
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.1 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+function ProjectCard({ project, index, featured }) {
+  const [ref, cls] = useReveal(0.08);
+  const [imgFailed, setImgFailed] = useState(false);
+  const hasLink = project.link && project.link !== '#';
 
   return (
-    <div
+    <a
       ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: hovered ? 'var(--surface)' : 'var(--bg)',
-        padding: isMobile ? 28 : 48,
-        position: 'relative',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(24px)',
-        transition: `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s, background 0.25s`,
-      }}
-      onClick={() => project.link !== '#' && window.open(project.link, '_blank')}
+      href={hasLink ? project.link : undefined}
+      target="_blank"
+      rel="noreferrer"
+      className={`card project${featured ? ' featured' : ''} ${cls}`}
+      style={{ transitionDelay: `${(index % 2) * 0.08}s` }}
     >
-      {/* animated bottom border */}
-      <div style={{
-        position: 'absolute',
-        bottom: 0, left: 0,
-        width: hovered ? '100%' : '0%',
-        height: 2,
-        background: 'var(--accent)',
-        transition: 'width 0.35s ease',
-      }} />
-
-      {/* arrow */}
-      <div style={{
-        position: 'absolute',
-        top: isMobile ? 28 : 48,
-        right: isMobile ? 28 : 48,
-        fontSize: 20,
-        color: hovered ? 'var(--accent)' : 'var(--border)',
-        transform: hovered ? 'translate(4px,-4px)' : 'translate(0,0)',
-        transition: 'color 0.2s, transform 0.2s',
-      }}>↗</div>
-
-      <div style={{
-        fontFamily: "'JetBrains Mono', monospace",
-        fontSize: 11,
-        color: 'var(--accent)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.12em',
-        marginBottom: 20,
-        paddingRight: 32,
-      }}>
-        {project.tag}
+      <div className="shot">
+        <div className="shot-bar">
+          <span className="dot" style={{ background: '#FF5F57' }} />
+          <span className="dot" style={{ background: '#FEBC2E' }} />
+          <span className="dot" style={{ background: '#28C840' }} />
+          <span className="shot-url">{hostOf(project.link)}</span>
+        </div>
+        {project.image && !imgFailed ? (
+          <img
+            src={process.env.PUBLIC_URL + project.image}
+            alt={`${project.title} homepage`}
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <div className="shot-fallback">{project.title}</div>
+        )}
       </div>
 
-      <h3 style={{
-        fontFamily: "'Space Grotesk', sans-serif",
-        fontSize: isMobile ? 20 : 26,
-        fontWeight: 600,
-        letterSpacing: '-0.02em',
-        marginBottom: 14,
-        paddingRight: 32,
-      }}>
-        {project.title}
-      </h3>
-
-      <p style={{
-        color: 'var(--muted)',
-        fontSize: 15,
-        lineHeight: 1.7,
-        marginBottom: 28,
-      }}>
-        {project.desc}
-      </p>
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-        {project.stack.map((tag) => (
-          <span key={tag} style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11,
-            padding: '5px 12px',
-            border: `1px solid ${hovered ? 'rgba(79,142,247,0.3)' : 'var(--border)'}`,
-            color: hovered ? 'var(--text)' : 'var(--muted)',
-            letterSpacing: '0.05em',
-            transition: 'border-color 0.2s, color 0.2s',
-          }}>
-            {tag}
-          </span>
-        ))}
+      <div className="project-body">
+        <div className="project-meta">
+          <span className="tag">{project.tag}</span>
+          {featured && <span className="featured-badge">Featured</span>}
+        </div>
+        <h3>
+          {project.title}
+          <span className="go">↗</span>
+        </h3>
+        <p>{project.desc}</p>
+        <div className="chips">
+          {project.stack.map((t) => <span key={t} className="chip">{t}</span>)}
+        </div>
       </div>
-    </div>
+    </a>
   );
 }
 
 export default function Projects() {
-  const isMobile = useIsMobile();
+  const [ref, cls] = useReveal();
 
   return (
-    <section id="projects" style={{
-      position: 'relative',
-      zIndex: 1,
-      padding: isMobile ? '80px 24px' : '100px 60px',
-      borderBottom: '1px solid var(--border)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginBottom: 64, flexWrap: 'wrap' }}>
-        <span style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 11,
-          color: 'var(--accent)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.15em',
-        }}>Selected Work</span>
-        <h2 style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontSize: 'clamp(28px, 4vw, 48px)',
-          fontWeight: 600,
-          letterSpacing: '-0.02em',
-        }}>Projects</h2>
-      </div>
+    <section id="projects" className="section">
+      <div className="container">
+        <div ref={ref} className={`section-head ${cls}`}>
+          <div className="eyebrow">Selected work</div>
+          <h2 className="section-title">Things I've <span className="grad-text">built & shipped.</span></h2>
+          <p className="section-sub">
+            Live products for real clients — e-commerce stores, internal platforms and web apps,
+            designed and built end-to-end.
+          </p>
+        </div>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
-        gap: 1,
-        background: 'var(--border)',
-      }}>
-        {projects.map((project, i) => (
-          <ProjectCard key={i} project={project} index={i} isMobile={isMobile} />
-        ))}
+        <div className="projects-grid">
+          {projects.map((project, i) => (
+            <ProjectCard key={project.title} project={project} index={i} featured={i === 0} />
+          ))}
+        </div>
       </div>
     </section>
   );

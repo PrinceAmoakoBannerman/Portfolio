@@ -28,6 +28,7 @@ export const projects = [
     desc: "A full-stack e-commerce platform for a UK-based clothing brand. Built end-to-end with Django — product catalogue, cart, checkout, and order management, all shipped to production.",
     stack: ["Python", "Django", "JavaScript", "PostgreSQL"],
     link: "https://tuffafrikan.com",
+    image: "/projects/tuff-afrikan.jpg",
   },
   {
     tag: "E-Commerce · 2026",
@@ -35,6 +36,7 @@ export const projects = [
     desc: "A luxury storefront for an Accra-based wig brand — shop human hair wigs, bundles and closures, or customise every detail of a wig, hand-finished and delivered worldwide.",
     stack: ["React", "JavaScript", "Tailwind CSS", "Vercel"],
     link: "https://hair-xcellence.vercel.app/",
+    image: "/projects/hair-xcellence.jpg",
   },
   {
     tag: "E-Commerce · 2026",
@@ -42,6 +44,7 @@ export const projects = [
     desc: "An e-commerce storefront for a skincare brand, built with Next.js — product catalogue, shopping experience, and a clean, brand-forward design.",
     stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
     link: "https://rumi-skincare.vercel.app/",
+    image: "/projects/rumi-skincare.jpg",
   },
   {
     tag: "Web App · 2026",
@@ -49,6 +52,7 @@ export const projects = [
     desc: "A luxury lifestyle link hub — a Linktree-style landing page that connects clients to premium chauffeur, market, and itinerary services from one elegant page.",
     stack: ["React", "JavaScript", "Tailwind CSS", "Vercel"],
     link: "https://luxe-link-ecru.vercel.app/",
+    image: "/projects/luxelink.jpg",
   },
   {
     tag: "Full-Stack · 2025",
@@ -56,6 +60,7 @@ export const projects = [
     desc: "A web-based asset management platform for tracking, managing, and organising company assets — from acquisition to disposal, with full lifecycle visibility.",
     stack: ["Python", "Django", "JavaScript", "PostgreSQL"],
     link: "https://asm2-sage.vercel.app/",
+    image: "/projects/asset-management.jpg",
   },
   {
     tag: "Web App · 2026",
@@ -63,6 +68,7 @@ export const projects = [
     desc: "A web-based audit report tool for creating, organising, and compiling audit documentation, with a clean interface for managing the reporting workflow.",
     stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
     link: "https://audit-two-tau.vercel.app/",
+    image: "/projects/audit.jpg",
   },
   {
     tag: "Web App · 2026",
@@ -70,6 +76,7 @@ export const projects = [
     desc: "An activity and experience discovery app — helping users find their next thing to do, with a clean, focused browsing experience.",
     stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
     link: "https://stepout-black.vercel.app/",
+    image: "/projects/stepout.jpg",
   },
 ];
 

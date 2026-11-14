@@ -5,20 +5,20 @@ import useIsMobile from '../hooks/useIsMobile';
 const NAV_ITEMS = [
   ['about', 'About'],
   ['projects', 'Work'],
-  ['blog', 'Blog'],
   ['skills', 'Skills'],
+  ['blog', 'Blog'],
   ['contact', 'Contact'],
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [hovered, setHovered] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll);
+    const onScroll = () => setScrolled(window.scrollY > 30);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -32,151 +32,62 @@ export default function Navbar() {
   }, [menuOpen]);
 
   const scrollTo = (id) => {
+    const delay = menuOpen ? 250 : 0;
     setMenuOpen(false);
-    setTimeout(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    }, 300);
+    setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), delay);
   };
 
-  const paddingY = scrolled ? (isMobile ? '12px' : '14px') : (isMobile ? '16px' : '20px');
-  const paddingX = isMobile ? '24px' : '60px';
+  const initials = config.name.split(' ').map((p) => p[0]).slice(0, 2).join('');
 
   return (
     <>
-      <nav style={{
-        position: 'fixed',
-        top: 0, left: 0, right: 0,
-        zIndex: 100,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: `${paddingY} ${paddingX}`,
-        background: 'rgba(10,10,15,0.92)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid var(--border)',
-        transition: 'padding 0.3s',
-      }}>
-        <a href="#hero" style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 14,
-          color: 'var(--accent)',
-          letterSpacing: '0.08em',
-          textDecoration: 'none',
-        }}>
-          {config.logo}
-        </a>
+      <div className={`nav-wrap${scrolled || menuOpen ? ' scrolled' : ''}`}>
+        <nav className="nav">
+          <a href="#hero" className="logo" onClick={(e) => { e.preventDefault(); scrollTo('hero'); }}>
+            <span className="logo-mark">{initials}</span>
+            <span>{config.name.split(' ')[0]}<span style={{ color: 'var(--accent-2)' }}>.</span></span>
+          </a>
 
-        {/* Desktop nav */}
-        {!isMobile && (
-          <ul style={{ display: 'flex', gap: 36, listStyle: 'none' }}>
-            {NAV_ITEMS.map(([id, label]) => (
-              <li key={id}>
-                <span
-                  onClick={() => scrollTo(id)}
-                  onMouseEnter={() => setHovered(id)}
-                  onMouseLeave={() => setHovered(null)}
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 12,
-                    color: hovered === id ? 'var(--text)' : 'var(--muted)',
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    transition: 'color 0.2s',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {label}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
+          {!isMobile && (
+            <ul className="nav-links">
+              {NAV_ITEMS.map(([id, label]) => (
+                <li key={id}><button onClick={() => scrollTo(id)}>{label}</button></li>
+              ))}
+            </ul>
+          )}
 
-        {/* Mobile hamburger button */}
-        {isMobile && (
-          <button
-            onClick={() => setMenuOpen(o => !o)}
-            aria-label="Toggle menu"
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 8,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 5,
-              zIndex: 101,
-            }}
-          >
-            <span style={{
-              display: 'block', width: 24, height: 2, background: 'var(--text)',
-              transition: 'transform 0.3s',
-              transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
-            }} />
-            <span style={{
-              display: 'block', width: 24, height: 2, background: 'var(--text)',
-              transition: 'opacity 0.3s',
-              opacity: menuOpen ? 0 : 1,
-            }} />
-            <span style={{
-              display: 'block', width: 24, height: 2, background: 'var(--text)',
-              transition: 'transform 0.3s',
-              transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
-            }} />
-          </button>
-        )}
-      </nav>
+          {!isMobile ? (
+            <button className="btn btn-primary nav-cta" onClick={() => scrollTo('contact')}>
+              Hire me
+            </button>
+          ) : (
+            <button
+              className={`burger${menuOpen ? ' open' : ''}`}
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+            >
+              <span /><span /><span />
+            </button>
+          )}
+        </nav>
+      </div>
 
-      {/* Mobile fullscreen overlay */}
       {isMobile && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 99,
-          background: 'rgba(10,10,15,0.97)',
-          backdropFilter: 'blur(20px)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 44,
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? 'all' : 'none',
-          transition: 'opacity 0.3s',
-        }}>
+        <div className={`mobile-menu${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
           {NAV_ITEMS.map(([id, label], i) => (
-            <span
+            <button
               key={id}
               onClick={() => scrollTo(id)}
-              style={{
-                fontFamily: "'Space Grotesk', sans-serif",
-                fontSize: 36,
-                fontWeight: 700,
-                color: 'var(--text)',
-                letterSpacing: '-0.02em',
-                cursor: 'pointer',
-                opacity: menuOpen ? 1 : 0,
-                transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
-                transition: `opacity 0.35s ease ${i * 0.07}s, transform 0.35s ease ${i * 0.07}s, color 0.2s`,
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text)'}
+              style={{ transitionDelay: menuOpen ? `${i * 0.06}s` : '0s' }}
             >
               {label}
-            </span>
+            </button>
           ))}
           <a
             href={`mailto:${config.email}`}
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 13,
-              color: 'var(--muted)',
-              textDecoration: 'none',
-              letterSpacing: '0.08em',
-              marginTop: 8,
-              opacity: menuOpen ? 1 : 0,
-              transition: `opacity 0.35s ease ${NAV_ITEMS.length * 0.07}s`,
-            }}
+            className="btn btn-primary"
+            style={{ marginTop: 12 }}
           >
             {config.email}
           </a>

@@ -1,93 +1,45 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { skills } from '../data';
-import useIsMobile from '../hooks/useIsMobile';
+import useReveal from '../hooks/useReveal';
 
-function SkillBlock({ skill, index, isMobile }) {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
+const TECH = [
+  'Python', 'Django', 'Django REST', 'PostgreSQL', 'JavaScript', 'React', 'Next.js',
+  'Tailwind CSS', 'HTML & CSS', 'Docker', 'Git', 'Linux', 'Vercel', 'REST APIs',
+];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.1 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
+function SkillCard({ skill, index }) {
+  const [ref, cls] = useReveal();
   return (
-    <div
-      ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: hovered ? 'var(--surface)' : 'var(--bg)',
-        padding: isMobile ? '28px 24px' : '40px 48px',
-        transition: `background 0.2s, opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`,
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(24px)',
-      }}
-    >
-      <div style={{ fontSize: 28, marginBottom: 20 }}>{skill.icon}</div>
-      <div style={{
-        fontFamily: "'Space Grotesk', sans-serif",
-        fontSize: 18,
-        fontWeight: 600,
-        marginBottom: 12,
-      }}>
-        {skill.name}
-      </div>
-      <div style={{
-        fontFamily: "'JetBrains Mono', monospace",
-        fontSize: 12,
-        color: 'var(--muted)',
-        lineHeight: 2,
-        letterSpacing: '0.04em',
-      }}>
-        {skill.items.map((item, i) => (
-          <div key={i}>{item}</div>
-        ))}
+    <div ref={ref} className={`card skill ${cls}`} style={{ transitionDelay: `${index * 0.08}s` }}>
+      <div className="skill-icon">{skill.icon}</div>
+      <h3>{skill.name}</h3>
+      <div className="chips">
+        {skill.items.map((item) => <span key={item} className="chip">{item}</span>)}
       </div>
     </div>
   );
 }
 
 export default function Skills() {
-  const isMobile = useIsMobile();
+  const [ref, cls] = useReveal();
 
   return (
-    <section id="skills" style={{
-      position: 'relative',
-      zIndex: 1,
-      padding: isMobile ? '80px 24px' : '100px 60px',
-      borderBottom: '1px solid var(--border)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginBottom: 64, flexWrap: 'wrap' }}>
-        <span style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 11,
-          color: 'var(--accent)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.15em',
-        }}>Expertise</span>
-        <h2 style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontSize: 'clamp(28px, 4vw, 48px)',
-          fontWeight: 600,
-          letterSpacing: '-0.02em',
-        }}>What I Build With</h2>
+    <section id="skills" className="section">
+      <div className="container">
+        <div ref={ref} className={`section-head ${cls}`}>
+          <div className="eyebrow">Expertise</div>
+          <h2 className="section-title">What I <span className="grad-text">build with.</span></h2>
+        </div>
+
+        <div className="skills-grid">
+          {skills.map((skill, i) => <SkillCard key={skill.name} skill={skill} index={i} />)}
+        </div>
       </div>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr' : `repeat(${skills.length}, 1fr)`,
-        gap: 1,
-        background: 'var(--border)',
-      }}>
-        {skills.map((skill, i) => (
-          <SkillBlock key={i} skill={skill} index={i} isMobile={isMobile} />
-        ))}
+      <div className="marquee" aria-hidden="true">
+        <div className="marquee-track">
+          {[...TECH, ...TECH].map((t, i) => <span key={i} className="marquee-item">{t}</span>)}
+        </div>
       </div>
     </section>
   );
