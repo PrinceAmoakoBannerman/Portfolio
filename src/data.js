@@ -30,6 +30,20 @@ export const projects = [
     link: "https://tuffafrikan.com",
   },
   {
+    tag: "E-Commerce · 2026",
+    title: "Hair Xcellence",
+    desc: "A luxury storefront for an Accra-based wig brand — shop human hair wigs, bundles and closures, or customise every detail of a wig, hand-finished and delivered worldwide.",
+    stack: ["React", "JavaScript", "Tailwind CSS", "Vercel"],
+    link: "https://hair-xcellence.vercel.app/",
+  },
+  {
+    tag: "E-Commerce · 2026",
+    title: "Rumi Skincare",
+    desc: "An e-commerce storefront for a skincare brand, built with Next.js — product catalogue, shopping experience, and a clean, brand-forward design.",
+    stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
+    link: "https://rumi-skincare.vercel.app/",
+  },
+  {
     tag: "Web App · 2026",
     title: "LuxeLink",
     desc: "A luxury lifestyle link hub — a Linktree-style landing page that connects clients to premium chauffeur, market, and itinerary services from one elegant page.",
@@ -42,13 +56,6 @@ export const projects = [
     desc: "A web-based asset management platform for tracking, managing, and organising company assets — from acquisition to disposal, with full lifecycle visibility.",
     stack: ["Python", "Django", "JavaScript", "PostgreSQL"],
     link: "https://asm2-sage.vercel.app/",
-  },
-  {
-    tag: "E-Commerce · 2026",
-    title: "Rumi Skincare",
-    desc: "An e-commerce storefront for a skincare brand, built with Next.js — product catalogue, shopping experience, and a clean, brand-forward design.",
-    stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
-    link: "https://rumi-skincare.vercel.app/",
   },
   {
     tag: "Web App · 2026",
